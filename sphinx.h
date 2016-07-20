@@ -32,6 +32,8 @@
 
 	#define UNALIGNED_RAM_ACCESS	1
 	#define USE_LITTLE_ENDIAN		1
+
+	#define USE_MMSEG		1	/// coreseek: turn chinese segment on.
 #else
 	#define USE_WINDOWS		0	/// whether to compile for Windows
 #endif

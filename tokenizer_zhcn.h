@@ -25,7 +25,7 @@
 
 #include "SegmenterManager.h"
 #include "Segmenter.h"
-#include "sphinxstd.h"
+#include "sphinxstd.h"	//加入以防止下方的SafeDelete报找不到错误
 /*
 class css::SegmenterManager;
 class css::Segmenter;
