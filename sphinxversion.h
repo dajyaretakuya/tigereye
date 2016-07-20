@@ -1,0 +1,1 @@
+#define SPH_GIT_COMMIT_ID "b453103"
