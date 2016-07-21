@@ -494,6 +494,10 @@ struct CSphTokenizerSettings
 	CSphString			m_sBlendMode;
 	CSphString			m_sIndexingPlugin;	///< this tokenizer wants an external plugin to process its raw output
 
+	//mmseg
+	int					m_iDebug; //coreseek: used to mark is debug output tokens
+	CSphString			m_sDictPath; //coreseek: where to find segmentor's dict.
+
 						CSphTokenizerSettings ();
 };
 
@@ -714,6 +718,7 @@ protected:
 
 	CSphLowercaser					m_tLC;						///< my lowercaser
 	int								m_iLastTokenLen;			///< last token length, in codepoints
+	int								m_iLastTokenBufferLen;		///< the buffer length -- coreseek;	use in mmseg patch.
 	bool							m_bTokenBoundary;			///< last token boundary flag (true after boundary codepoint followed by separator)
 	bool							m_bBoundary;				///< boundary flag (true immediately after boundary codepoint)
 	int								m_iBoundaryOffset;			///< boundary character offset (in bytes)

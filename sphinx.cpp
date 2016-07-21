@@ -2587,7 +2587,7 @@ public:
 	virtual void				SetBuffer(BYTE * sBuffer, int iLength);
 	virtual BYTE *				GetToken();
 
-	virtual ISphTokenizer *		Clone(bool bEscaped) const;
+	virtual ISphTokenizer *		Clone(ESphTokenizerClone eMode) const;
 
 	void setDictPath(const char* path) { m_dictpath = path; }
 public:
@@ -2621,7 +2621,7 @@ template < bool IS_QUERY >
 class CSphTokenizer_UTF8SpaceSeg : public CSphTokenizer_UTF8MMSeg<IS_QUERY>
 {
 public:
-	virtual ISphTokenizer *		Clone(bool bEscaped) const;
+	virtual ISphTokenizer *		Clone(ESphTokenizerClone eMode) const;
 
 protected:
 	virtual bool				IsSegment(const BYTE * pCur);
@@ -3850,6 +3850,23 @@ ISphTokenizer * sphCreateUTF8NgramTokenizer ()
 	return new CSphTokenizer_UTF8Ngram<false> ();
 }
 
+#if USE_MMSEG 
+
+ISphTokenizer *	sphCreateUTF8ChineseTokenizer(const char* dict_path)
+{
+	CSphTokenizer_UTF8MMSeg<false>* tokenizer = new CSphTokenizer_UTF8MMSeg<false>();
+	tokenizer->setDictPath(dict_path);
+	return tokenizer;
+}
+
+ISphTokenizer *	sphCreateUTF8ChineseSpaceTokenizer()
+{
+	CSphTokenizer_UTF8SpaceSeg<false>* tokenizer = new CSphTokenizer_UTF8SpaceSeg<false>();
+	return tokenizer;
+}
+
+#endif 
+
 /////////////////////////////////////////////////////////////////////////////
 
 enum
@@ -4778,7 +4795,12 @@ ISphTokenizer * ISphTokenizer::Create ( const CSphTokenizerSettings & tSettings,
 	switch ( tSettings.m_iType )
 	{
 		case TOKENIZER_UTF8:	pTokenizer = sphCreateUTF8Tokenizer (); break;
-		case TOKENIZER_NGRAM:	pTokenizer = sphCreateUTF8NgramTokenizer (); break;
+		case TOKENIZER_NGRAM:	pTokenizer = sphCreateUTF8NgramTokenizer(); break;
+#if USE_MMSEG
+		case TOKENIZER_ZHCN_UTF8:
+			pTokenizer = sphCreateUTF8ChineseTokenizer
+				(tSettings.m_sDictPath.cstr()); break;
+#endif
 		default:
 			sError.SetSprintf ( "failed to create tokenizer (unknown charset type '%d')", tSettings.m_iType );
 			return NULL;
@@ -6509,7 +6531,7 @@ void CSphTokenizer_UTF8MMSeg<IS_QUERY>::SetBuffer(BYTE * sBuffer, int iLength)
 		sphDie(" Tokenizer initialization failure. ");
 	m_segoffset = 0;
 	m_segToken = (char*)m_pCur;
-	m_bSynonym_token = false;
+	m_bWasSynonym = false;
 }
 
 template < bool IS_QUERY >
@@ -6558,7 +6580,7 @@ BYTE *	CSphTokenizer_UTF8MMSeg<IS_QUERY>::GetToken()
 			m_iLastTokenLenMMSeg += m_iLastTokenLen;
 		}
 
-		if (m_bSynonym_token)
+		if (m_bWasSynonym)
 			break;
 
 		if (this->WasTokenSpecial())
@@ -6571,17 +6593,17 @@ BYTE *	CSphTokenizer_UTF8MMSeg<IS_QUERY>::GetToken()
 		m_pAccumSeg = m_sAccumSeg;
 
 		//m_segToken = (char*)(m_pTokenEnd-m_iLastTokenBufferLen);
-		m_bSynonym_token = false;
+		m_bWasSynonym = false;
 		return m_sAccumSeg;
 	}
 	//return NULL;
 }
 
 template < bool IS_QUERY >
-ISphTokenizer * CSphTokenizer_UTF8MMSeg<IS_QUERY>::Clone(bool bEscaped) const
+ISphTokenizer * CSphTokenizer_UTF8MMSeg<IS_QUERY>::Clone(ESphTokenizerClone eMode) const
 {
 	CSphTokenizer_UTF8MMSeg * pClone = new CSphTokenizer_UTF8MMSeg();
-	pClone->CloneBase(this, bEscaped);
+	pClone->CloneBase(this, eMode);
 	pClone->m_dictpath = m_dictpath;
 	return pClone;
 }
@@ -6599,10 +6621,10 @@ const BYTE* CSphTokenizer_UTF8MMSeg<IS_QUERY>::GetThesaurus(BYTE * sBuffer, int 
 ///////////////////////////////////////////////////////////////////////////////////////
 
 template < bool IS_QUERY >
-ISphTokenizer * CSphTokenizer_UTF8SpaceSeg<IS_QUERY>::Clone(bool bEscaped) const
+ISphTokenizer * CSphTokenizer_UTF8SpaceSeg<IS_QUERY>::Clone(ESphTokenizerClone eMode) const
 {
 	CSphTokenizer_UTF8SpaceSeg * pClone = new CSphTokenizer_UTF8SpaceSeg();
-	pClone->CloneBase(this, bEscaped);
+	pClone->CloneBase(this, eMode);
 	pClone->m_dictpath = m_dictpath;
 	return pClone;
 }
