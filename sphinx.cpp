@@ -2617,7 +2617,8 @@ protected:
 	int					m_iLastTokenLenMMSeg;			///< last token length, in codepoints
 };
 
-class CSphTokenizer_UTF8SpaceSeg : public CSphTokenizer_UTF8MMSeg
+template < bool IS_QUERY >
+class CSphTokenizer_UTF8SpaceSeg : public CSphTokenizer_UTF8MMSeg<IS_QUERY>
 {
 public:
 	virtual ISphTokenizer *		Clone(bool bEscaped) const;
@@ -6474,7 +6475,7 @@ BYTE * CSphTokenizer_UTF8Ngram<IS_QUERY>::GetToken ()
 #if USE_MMSEG
 //////////////////////////////////////////////////////////////////////////
 template < bool IS_QUERY >
-CSphTokenizer_UTF8MMSeg::CSphTokenizer_UTF8MMSeg()
+CSphTokenizer_UTF8MMSeg<IS_QUERY>::CSphTokenizer_UTF8MMSeg()
 	:CSphTokenizer_UTF8(),
 	m_segoffset(0)
 {
@@ -6498,7 +6499,7 @@ CSphTokenizer_UTF8MMSeg::CSphTokenizer_UTF8MMSeg()
 }
 
 template < bool IS_QUERY >
-void CSphTokenizer_UTF8MMSeg::SetBuffer(BYTE * sBuffer, int iLength)
+void CSphTokenizer_UTF8MMSeg<IS_QUERY>::SetBuffer(BYTE * sBuffer, int iLength)
 {
 	CSphTokenizer_UTF8::SetBuffer(sBuffer, iLength);
 	css::Segmenter* seg = d_->GetSegmenter(m_dictpath.cstr());
@@ -6512,7 +6513,7 @@ void CSphTokenizer_UTF8MMSeg::SetBuffer(BYTE * sBuffer, int iLength)
 }
 
 template < bool IS_QUERY >
-bool	CSphTokenizer_UTF8MMSeg::IsSegment(const BYTE * pCur)
+bool	CSphTokenizer_UTF8MMSeg<IS_QUERY>::IsSegment(const BYTE * pCur)
 {
 	size_t offset = pCur - m_pBuffer;
 	//if(offset == 0)	return false;
@@ -6536,7 +6537,7 @@ bool	CSphTokenizer_UTF8MMSeg::IsSegment(const BYTE * pCur)
 }
 
 template < bool IS_QUERY >
-BYTE *	CSphTokenizer_UTF8MMSeg::GetToken()
+BYTE *	CSphTokenizer_UTF8MMSeg<IS_QUERY>::GetToken()
 {
 	m_iLastTokenLenMMSeg = 0;
 	//BYTE* tok = CSphTokenizer_UTF8::GetToken();
@@ -6577,7 +6578,7 @@ BYTE *	CSphTokenizer_UTF8MMSeg::GetToken()
 }
 
 template < bool IS_QUERY >
-ISphTokenizer * CSphTokenizer_UTF8MMSeg::Clone(bool bEscaped) const
+ISphTokenizer * CSphTokenizer_UTF8MMSeg<IS_QUERY>::Clone(bool bEscaped) const
 {
 	CSphTokenizer_UTF8MMSeg * pClone = new CSphTokenizer_UTF8MMSeg();
 	pClone->CloneBase(this, bEscaped);
@@ -6586,7 +6587,7 @@ ISphTokenizer * CSphTokenizer_UTF8MMSeg::Clone(bool bEscaped) const
 }
 
 template < bool IS_QUERY >
-const BYTE* CSphTokenizer_UTF8MMSeg::GetThesaurus(BYTE * sBuffer, int iLength)
+const BYTE* CSphTokenizer_UTF8MMSeg<IS_QUERY>::GetThesaurus(BYTE * sBuffer, int iLength)
 {
 	css::Segmenter* seg = d_->GetSegmenter(m_dictpath.cstr());
 	if (seg)
@@ -6598,7 +6599,7 @@ const BYTE* CSphTokenizer_UTF8MMSeg::GetThesaurus(BYTE * sBuffer, int iLength)
 ///////////////////////////////////////////////////////////////////////////////////////
 
 template < bool IS_QUERY >
-ISphTokenizer * CSphTokenizer_UTF8SpaceSeg::Clone(bool bEscaped) const
+ISphTokenizer * CSphTokenizer_UTF8SpaceSeg<IS_QUERY>::Clone(bool bEscaped) const
 {
 	CSphTokenizer_UTF8SpaceSeg * pClone = new CSphTokenizer_UTF8SpaceSeg();
 	pClone->CloneBase(this, bEscaped);
@@ -6607,7 +6608,7 @@ ISphTokenizer * CSphTokenizer_UTF8SpaceSeg::Clone(bool bEscaped) const
 }
 
 template < bool IS_QUERY >
-bool CSphTokenizer_UTF8SpaceSeg::IsSegment(const BYTE *)
+bool CSphTokenizer_UTF8SpaceSeg<IS_QUERY>::IsSegment(const BYTE *)
 {
 
 	if (m_pTokenEnd == NULL)	return false;
