@@ -352,7 +352,7 @@ static KeyDesc_t g_dKeysSource[] =
 	{ "unpack_zlib",			KEY_LIST, NULL },
 	{ "unpack_mysqlcompress",	KEY_LIST, NULL },
 	{ "unpack_mysqlcompress_maxsize", 0, NULL },
-	{ "odbc_dsn",				0, NULL },
+	{ "odbc_dsn", 0, NULL },
 	{ "sql_joined_field",		KEY_LIST, NULL },
 	{ "sql_attr_string",		KEY_LIST, NULL },
 	{ "sql_attr_str2wordcount", KEY_REMOVED | KEY_LIST, NULL },
@@ -407,6 +407,8 @@ static KeyDesc_t g_dKeysIndex[] =
 	{ "min_word_len",			0, NULL },
 	{ "charset_type",			KEY_REMOVED, NULL },
 	{ "charset_table",			0, NULL },
+	{ "charset_dictpath",		0, NULL }, //coreseek: mmseg's dictionary path
+	{ "charset_debug",			0, NULL }, //coreseek: debug output tokens
 	{ "ignore_chars",			0, NULL },
 	{ "min_prefix_len",			0, NULL },
 	{ "min_infix_len",			0, NULL },
@@ -1154,6 +1156,15 @@ void sphConfTokenizer ( const CSphConfigSection & hIndex, CSphTokenizerSettings 
 	int iBoundaryStep = Max ( hIndex.GetInt ( "phrase_boundary_step" ), -1 );
 	if ( iBoundaryStep!=0 )
 		tSettings.m_sBoundary = hIndex.GetStr ( "phrase_boundary" );
+
+#if USE_MMSEG  || USE_CRFSEG
+	//XXX:fixme : sphinx changes tokenizer create process
+	if (hIndex("charset_dictpath"))
+	{
+		tSettings.m_sDictPath = hIndex.GetStr ("charset_dictpath");
+		tSettings.m_iType = TOKENIZER_ZHCN_UTF8;
+	}
+#endif
 }
 
 void sphConfDictionary ( const CSphConfigSection & hIndex, CSphDictSettings & tSettings )
