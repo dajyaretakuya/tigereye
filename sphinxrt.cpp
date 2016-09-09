@@ -1393,7 +1393,7 @@ void RtIndex_t::ForceRamFlush ( bool bPeriodic )
 	Verify ( m_tWriting.Unlock() );
 
 	tmSave = sphMicroTimer() - tmSave;
-	sphInfo ( "rt: index %s: ramchunk saved ok (mode=%s, last TID="INT64_FMT", current TID="INT64_FMT", "
+	sphInfo ( "rt: index %s: ramchunk saved ok (mode=%s, last TID=" INT64_FMT", current TID=" INT64_FMT", "
 		"ram=%d.%03d Mb, time delta=%d sec, took=%d.%03d sec)"
 		, m_sIndexName.cstr(), bPeriodic ? "periodic" : "forced"
 		, iWasTID, m_iTID, (int)(iUsedRam/1024/1024), (int)((iUsedRam/1024)%1000)
@@ -1490,7 +1490,7 @@ bool RtIndex_t::AddDocument ( int iFields, const char ** ppFields, const CSphMat
 
 		if ( bGotID )
 		{
-			sError.SetSprintf ( "duplicate id '"UINT64_FMT"'", (uint64_t)tDoc.m_uDocID );
+			sError.SetSprintf ( "duplicate id '" UINT64_FMT"'", (uint64_t)tDoc.m_uDocID );
 			return false; // already exists and not deleted; INSERT fails
 		}
 	}
@@ -3744,7 +3744,7 @@ void RtIndex_t::SaveDiskDataImpl ( const char * sFilename, const SphChunkGuard_t
 		iInfixCheckpointWordsSize = pInfixer->GetBlocksWordsSize();
 
 		if ( iInfixBlockOffset>UINT_MAX )
-			sphWarning ( "INTERNAL ERROR: dictionary size "INT64_FMT" overflow at infix save", iInfixBlockOffset );
+			sphWarning ( "INTERNAL ERROR: dictionary size " INT64_FMT" overflow at infix save", iInfixBlockOffset );
 	}
 
 	// flush header
@@ -4223,7 +4223,7 @@ static bool CheckVectorLength ( int iLen, int64_t iSaneLen, const char * sAt, CS
 	if ( iLen>=0 && iLen<iSaneLen )
 		return true;
 
-	sError.SetSprintf ( "broken index, %s length overflow (len=%d, max="INT64_FMT")", sAt, iLen, iSaneLen );
+	sError.SetSprintf ( "broken index, %s length overflow (len=%d, max=" INT64_FMT")", sAt, iLen, iSaneLen );
 	return false;
 }
 
@@ -4578,7 +4578,7 @@ int RtIndex_t::DebugCheck ( FILE * fp )
 		LOC_FAIL(( fp, "wrong attribute stride (current=%d, should_be=%d)", m_iStride, DOCINFO_IDSIZE+m_tSchema.GetRowSize() ));
 
 	if ( m_iSoftRamLimit<=0 )
-		LOC_FAIL(( fp, "wrong RAM limit (current="INT64_FMT")", m_iSoftRamLimit ));
+		LOC_FAIL(( fp, "wrong RAM limit (current=" INT64_FMT")", m_iSoftRamLimit ));
 
 	if ( m_iLockFD<0 )
 		LOC_FAIL(( fp, "index lock file id < 0" ));
@@ -4587,13 +4587,13 @@ int RtIndex_t::DebugCheck ( FILE * fp )
 		LOC_FAIL(( fp, "disk chunk base < 0" ));
 
 	if ( m_iTID<0 )
-		LOC_FAIL(( fp, "index TID < 0 (current="INT64_FMT")", m_iTID ));
+		LOC_FAIL(( fp, "index TID < 0 (current=" INT64_FMT")", m_iTID ));
 
 	if ( m_iSavedTID<0 )
-		LOC_FAIL(( fp, "index saved TID < 0 (current="INT64_FMT")", m_iSavedTID ));
+		LOC_FAIL(( fp, "index saved TID < 0 (current=" INT64_FMT")", m_iSavedTID ));
 
 	if ( m_iTID<m_iSavedTID )
-		LOC_FAIL(( fp, "index TID < index saved TID (current="INT64_FMT", saved="INT64_FMT")", m_iTID, m_iSavedTID ));
+		LOC_FAIL(( fp, "index TID < index saved TID (current=" INT64_FMT", saved=" INT64_FMT")", m_iTID, m_iSavedTID ));
 
 	if ( m_iWordsCheckpoint!=RTDICT_CHECKPOINT_V3 && m_iWordsCheckpoint!=RTDICT_CHECKPOINT_V5 )
 		LOC_FAIL(( fp, "unexpected number of words per checkpoint (expected 1024 or 48, got %d)", m_iWordsCheckpoint ));
@@ -5269,7 +5269,7 @@ int RtIndex_t::DebugCheck ( FILE * fp )
 
 						if ( iCur<=iPrev )
 						{
-							LOC_FAIL(( fp, "unsorted MVA values (segment=%d, row=%u, mvaattr=%d, docid="DOCID_FMT", val[%u]="INT64_FMT", val[%u]="INT64_FMT")",
+							LOC_FAIL(( fp, "unsorted MVA values (segment=%d, row=%u, mvaattr=%d, docid="DOCID_FMT", val[%u]=" INT64_FMT", val[%u]=" INT64_FMT")",
 								iSegment, uRow, iItem, uLastID, ( iItem>=iMva64 ? uVal-2 : uVal-1 ), iPrev, uVal, iCur ));
 						}
 
@@ -8192,7 +8192,7 @@ bool RtIndex_t::AttachDiskIndex ( CSphIndex * pIndex, CSphString & sError )
 		if ( iCount + pIndex->GetKillListSize()!=iSizeMax )
 		{
 			SafeDeleteArray ( pIndexDocList );
-			sError.SetSprintf ( "ATTACH failed, documents overflow (count="INT64_FMT", size max="INT64_FMT")", iCount + pIndex->GetKillListSize(), iSizeMax );
+			sError.SetSprintf ( "ATTACH failed, documents overflow (count=" INT64_FMT", size max=" INT64_FMT")", iCount + pIndex->GetKillListSize(), iSizeMax );
 			return false;
 		}
 
@@ -8244,7 +8244,7 @@ bool RtIndex_t::AttachDiskIndex ( CSphIndex * pIndex, CSphString & sError )
 		if ( iCount!=iSizeMax )
 		{
 			SafeDeleteArray ( pCombined );
-			sError.SetSprintf ( "ATTACH failed, kill-list overflow (size="INT64_FMT", size max="INT64_FMT")", iCount, iSizeMax );
+			sError.SetSprintf ( "ATTACH failed, kill-list overflow (size=" INT64_FMT", size max=" INT64_FMT")", iCount, iSizeMax );
 			return false;
 		}
 
@@ -8841,7 +8841,7 @@ bool BinlogReader_c::CheckCrc ( const char * sOp, const char * sIndexName, int64
 	ResetCrc();
 	bool bPassed = ( uRef==uCRC );
 	if ( !bPassed )
-		sphWarning ( "binlog: %s: CRC mismatch (index=%s, tid="INT64_FMT", pos="INT64_FMT")", sOp, sIndexName ? sIndexName : "", iTid, iTxnPos );
+		sphWarning ( "binlog: %s: CRC mismatch (index=%s, tid=" INT64_FMT", pos=" INT64_FMT")", sOp, sIndexName ? sIndexName : "", iTid, iTxnPos );
 	return bPassed;
 }
 
@@ -9063,7 +9063,7 @@ void RtBinlog_c::BinlogReconfigure ( int64_t * pTID, const char * sIndexName, co
 void RtBinlog_c::NotifyIndexFlush ( const char * sIndexName, int64_t iTID, bool bShutdown )
 {
 	if ( m_bReplayMode )
-		sphInfo ( "index '%s': ramchunk saved. TID="INT64_FMT"", sIndexName, iTID );
+		sphInfo ( "index '%s': ramchunk saved. TID=" INT64_FMT"", sIndexName, iTID );
 
 	if ( m_bReplayMode || m_bDisabled )
 		return;
@@ -9544,7 +9544,7 @@ int RtBinlog_c::ReplayBinlog ( const SmallStringHash_T<CSphIndex*> & hIndexes, D
 		iPos = tReader.GetPos();
 		if ( tReader.GetDword()!=BLOP_MAGIC )
 		{
-			sphDie ( "binlog: log missing txn marker at pos="INT64_FMT" (corrupted?)", iPos );
+			sphDie ( "binlog: log missing txn marker at pos=" INT64_FMT" (corrupted?)", iPos );
 			break;
 		}
 
@@ -9552,7 +9552,7 @@ int RtBinlog_c::ReplayBinlog ( const SmallStringHash_T<CSphIndex*> & hIndexes, D
 		const uint64_t uOp = tReader.UnzipOffset ();
 
 		if ( uOp<=0 || uOp>=BLOP_TOTAL )
-			sphDie ( "binlog: unexpected entry (blop="UINT64_FMT", pos="INT64_FMT")", uOp, iPos );
+			sphDie ( "binlog: unexpected entry (blop=" UINT64_FMT", pos=" INT64_FMT")", uOp, iPos );
 
 		// FIXME! blop might be OK but skipped (eg. index that is no longer)
 		switch ( uOp )
@@ -9591,10 +9591,10 @@ int RtBinlog_c::ReplayBinlog ( const SmallStringHash_T<CSphIndex*> & hIndexes, D
 	tmReplay = sphMicroTimer() - tmReplay;
 
 	if ( tReader.GetErrorFlag() )
-		sphWarning ( "binlog: log io error at pos="INT64_FMT": %s", iPos, sError.cstr() );
+		sphWarning ( "binlog: log io error at pos=" INT64_FMT": %s", iPos, sError.cstr() );
 
 	if ( !bReplayOK )
-		sphWarning ( "binlog: replay error at pos="INT64_FMT")", iPos );
+		sphWarning ( "binlog: replay error at pos=" INT64_FMT")", iPos );
 
 	// show additional replay statistics
 	ARRAY_FOREACH ( i, tLog.m_dIndexInfos )
@@ -9602,17 +9602,17 @@ int RtBinlog_c::ReplayBinlog ( const SmallStringHash_T<CSphIndex*> & hIndexes, D
 		const BinlogIndexInfo_t & tIndex = tLog.m_dIndexInfos[i];
 		if ( !hIndexes ( tIndex.m_sName.cstr() ) )
 		{
-			sphWarning ( "binlog: index %s: missing; tids "INT64_FMT" to "INT64_FMT" skipped!",
+			sphWarning ( "binlog: index %s: missing; tids " INT64_FMT" to " INT64_FMT" skipped!",
 				tIndex.m_sName.cstr(), tIndex.m_iMinTID, tIndex.m_iMaxTID );
 
 		} else if ( tIndex.m_iPreReplayTID < tIndex.m_iMaxTID )
 		{
-			sphInfo ( "binlog: index %s: recovered from tid "INT64_FMT" to tid "INT64_FMT,
+			sphInfo ( "binlog: index %s: recovered from tid " INT64_FMT" to tid " INT64_FMT,
 				tIndex.m_sName.cstr(), tIndex.m_iPreReplayTID, tIndex.m_iMaxTID );
 
 		} else
 		{
-			sphInfo ( "binlog: index %s: skipped at tid "INT64_FMT" and max binlog tid "INT64_FMT,
+			sphInfo ( "binlog: index %s: skipped at tid " INT64_FMT" and max binlog tid " INT64_FMT,
 				tIndex.m_sName.cstr(), tIndex.m_iPreReplayTID, tIndex.m_iMaxTID );
 		}
 	}
@@ -9637,7 +9637,7 @@ static BinlogIndexInfo_t & ReplayIndexID ( BinlogReader_c & tReader, BinlogFileD
 	const int iVal = (int)tReader.UnzipOffset();
 
 	if ( iVal<0 || iVal>=tLog.m_dIndexInfos.GetLength() )
-		sphDie ( "binlog: %s: unexpected index id (id=%d, max=%d, pos="INT64_FMT")",
+		sphDie ( "binlog: %s: unexpected index id (id=%d, max=%d, pos=" INT64_FMT")",
 			sPlace, iVal, tLog.m_dIndexInfos.GetLength(), iTxnPos );
 
 	return tLog.m_dIndexInfos[iVal];
@@ -9687,18 +9687,18 @@ bool RtBinlog_c::ReplayCommit ( int iBinlog, DWORD uReplayFlags, BinlogReader_c 
 
 	// check TID
 	if ( iTID<tIndex.m_iMaxTID )
-		sphDie ( "binlog: commit: descending tid (index=%s, lasttid="INT64_FMT", logtid="INT64_FMT", pos="INT64_FMT")",
+		sphDie ( "binlog: commit: descending tid (index=%s, lasttid=" INT64_FMT", logtid=" INT64_FMT", pos=" INT64_FMT")",
 			tIndex.m_sName.cstr(), tIndex.m_iMaxTID, iTID, iTxnPos );
 
 	// check timestamp
 	if ( tmStamp<tIndex.m_tmMax )
 	{
 		if (!( uReplayFlags & SPH_REPLAY_ACCEPT_DESC_TIMESTAMP ))
-			sphDie ( "binlog: commit: descending time (index=%s, lasttime="INT64_FMT", logtime="INT64_FMT", pos="INT64_FMT")",
+			sphDie ( "binlog: commit: descending time (index=%s, lasttime=" INT64_FMT", logtime=" INT64_FMT", pos=" INT64_FMT")",
 				tIndex.m_sName.cstr(), tIndex.m_tmMax, tmStamp, iTxnPos );
 
 		sphWarning ( "binlog: commit: replaying txn despite descending time "
-			"(index=%s, logtid="INT64_FMT", lasttime="INT64_FMT", logtime="INT64_FMT", pos="INT64_FMT")",
+			"(index=%s, logtid=" INT64_FMT", lasttime=" INT64_FMT", logtime=" INT64_FMT", pos=" INT64_FMT")",
 			tIndex.m_sName.cstr(), iTID, tIndex.m_tmMax, tmStamp, iTxnPos );
 		tIndex.m_tmMax = tmStamp;
 	}
@@ -9709,7 +9709,7 @@ bool RtBinlog_c::ReplayCommit ( int iBinlog, DWORD uReplayFlags, BinlogReader_c 
 		// we normally expect per-index TIDs to be sequential
 		// but let's be graceful about that
 		if ( iTID!=tIndex.m_pRT->m_iTID+1 )
-			sphWarning ( "binlog: commit: unexpected tid (index=%s, indextid="INT64_FMT", logtid="INT64_FMT", pos="INT64_FMT")",
+			sphWarning ( "binlog: commit: unexpected tid (index=%s, indextid=" INT64_FMT", logtid=" INT64_FMT", pos=" INT64_FMT")",
 				tIndex.m_sName.cstr(), tIndex.m_pRT->m_iTID, iTID, iTxnPos );
 
 		// in case dict=keywords
@@ -9744,7 +9744,7 @@ bool RtBinlog_c::ReplayIndexAdd ( int iBinlog, const SmallStringHash_T<CSphIndex
 
 	uint64_t uVal = tReader.UnzipOffset();
 	if ( (int)uVal!=tLog.m_dIndexInfos.GetLength() )
-		sphDie ( "binlog: indexadd: unexpected index id (id="UINT64_FMT", expected=%d, pos="INT64_FMT")",
+		sphDie ( "binlog: indexadd: unexpected index id (id=" UINT64_FMT", expected=%d, pos=" INT64_FMT")",
 			uVal, tLog.m_dIndexInfos.GetLength(), iTxnPos );
 
 	// load data
@@ -9760,7 +9760,7 @@ bool RtBinlog_c::ReplayIndexAdd ( int iBinlog, const SmallStringHash_T<CSphIndex
 	// check for index name dupes
 	ARRAY_FOREACH ( i, tLog.m_dIndexInfos )
 		if ( tLog.m_dIndexInfos[i].m_sName==sName )
-			sphDie ( "binlog: duplicate index name (name=%s, dupeid=%d, pos="INT64_FMT")",
+			sphDie ( "binlog: duplicate index name (name=%s, dupeid=%d, pos=" INT64_FMT")",
 				sName.cstr(), i, iTxnPos );
 
 	// not a dupe, lets add
@@ -9817,10 +9817,10 @@ bool RtBinlog_c::ReplayUpdateAttributes ( int iBinlog, BinlogReader_c & tReader 
 
 	// check TID, time order in log
 	if ( iTID<tIndex.m_iMaxTID )
-		sphDie ( "binlog: update: descending tid (index=%s, lasttid="INT64_FMT", logtid="INT64_FMT", pos="INT64_FMT")",
+		sphDie ( "binlog: update: descending tid (index=%s, lasttid=" INT64_FMT", logtid=" INT64_FMT", pos=" INT64_FMT")",
 			tIndex.m_sName.cstr(), tIndex.m_iMaxTID, iTID, iTxnPos );
 	if ( tmStamp<tIndex.m_tmMax )
-		sphDie ( "binlog: update: descending time (index=%s, lasttime="INT64_FMT", logtime="INT64_FMT", pos="INT64_FMT")",
+		sphDie ( "binlog: update: descending time (index=%s, lasttime=" INT64_FMT", logtime=" INT64_FMT", pos=" INT64_FMT")",
 			tIndex.m_sName.cstr(), tIndex.m_tmMax, tmStamp, iTxnPos );
 
 	if ( tIndex.m_pIndex && iTID > tIndex.m_pIndex->m_iTID )
@@ -9828,7 +9828,7 @@ bool RtBinlog_c::ReplayUpdateAttributes ( int iBinlog, BinlogReader_c & tReader 
 		// we normally expect per-index TIDs to be sequential
 		// but let's be graceful about that
 		if ( iTID!=tIndex.m_pIndex->m_iTID+1 )
-			sphWarning ( "binlog: update: unexpected tid (index=%s, indextid="INT64_FMT", logtid="INT64_FMT", pos="INT64_FMT")",
+			sphWarning ( "binlog: update: unexpected tid (index=%s, indextid=" INT64_FMT", logtid=" INT64_FMT", pos=" INT64_FMT")",
 				tIndex.m_sName.cstr(), tIndex.m_pIndex->m_iTID, iTID, iTxnPos );
 
 		tUpd.m_dRows.Resize ( tUpd.m_dDocids.GetLength() );
@@ -9896,7 +9896,7 @@ bool RtBinlog_c::ReplayCacheAdd ( int iBinlog, BinlogReader_c & tReader ) const
 		if ( tCache.m_iMinTID!=tIndex.m_iMinTID || tCache.m_iMaxTID!=tIndex.m_iMaxTID )
 		{
 			sphWarning ( "binlog: cache mismatch: index %s tid ranges mismatch "
-				"(cached "INT64_FMT" to "INT64_FMT", replayed "INT64_FMT" to "INT64_FMT")",
+				"(cached " INT64_FMT" to " INT64_FMT", replayed " INT64_FMT" to " INT64_FMT")",
 				tCache.m_sName.cstr(),
 				tCache.m_iMinTID, tCache.m_iMaxTID, tIndex.m_iMinTID, tIndex.m_iMaxTID );
 		}
@@ -9924,7 +9924,7 @@ bool RtBinlog_c::ReplayReconfigure ( int iBinlog, DWORD uReplayFlags, BinlogRead
 	CSphReconfigureSettings tSettings;
 	LoadIndexSettings ( tSettings.m_tIndex, tReader, INDEX_FORMAT_VERSION );
 	if ( !LoadTokenizerSettings ( tReader, tSettings.m_tTokenizer, tEmbeddedFiles, INDEX_FORMAT_VERSION, sError ) )
-		sphDie ( "binlog: reconfigure: failed to load settings (index=%s, lasttid="INT64_FMT", logtid="INT64_FMT", pos="INT64_FMT", error=%s)",
+		sphDie ( "binlog: reconfigure: failed to load settings (index=%s, lasttid=" INT64_FMT", logtid=" INT64_FMT", pos=" INT64_FMT", error=%s)",
 			tIndex.m_sName.cstr(), tIndex.m_iMaxTID, iTID, iTxnPos, sError.cstr() );
 	LoadDictionarySettings ( tReader, tSettings.m_tDict, tEmbeddedFiles, INDEX_FORMAT_VERSION, sError );
 
@@ -9934,18 +9934,18 @@ bool RtBinlog_c::ReplayReconfigure ( int iBinlog, DWORD uReplayFlags, BinlogRead
 
 	// check TID
 	if ( iTID<tIndex.m_iMaxTID )
-		sphDie ( "binlog: reconfigure: descending tid (index=%s, lasttid="INT64_FMT", logtid="INT64_FMT", pos="INT64_FMT")",
+		sphDie ( "binlog: reconfigure: descending tid (index=%s, lasttid=" INT64_FMT", logtid=" INT64_FMT", pos=" INT64_FMT")",
 			tIndex.m_sName.cstr(), tIndex.m_iMaxTID, iTID, iTxnPos );
 
 	// check timestamp
 	if ( tmStamp<tIndex.m_tmMax )
 	{
 		if (!( uReplayFlags & SPH_REPLAY_ACCEPT_DESC_TIMESTAMP ))
-			sphDie ( "binlog: reconfigure: descending time (index=%s, lasttime="INT64_FMT", logtime="INT64_FMT", pos="INT64_FMT")",
+			sphDie ( "binlog: reconfigure: descending time (index=%s, lasttime=" INT64_FMT", logtime=" INT64_FMT", pos=" INT64_FMT")",
 				tIndex.m_sName.cstr(), tIndex.m_tmMax, tmStamp, iTxnPos );
 
 		sphWarning ( "binlog: reconfigure: replaying txn despite descending time "
-			"(index=%s, logtid="INT64_FMT", lasttime="INT64_FMT", logtime="INT64_FMT", pos="INT64_FMT")",
+			"(index=%s, logtid=" INT64_FMT", lasttime=" INT64_FMT", logtime=" INT64_FMT", pos=" INT64_FMT")",
 			tIndex.m_sName.cstr(), iTID, tIndex.m_tmMax, tmStamp, iTxnPos );
 		tIndex.m_tmMax = tmStamp;
 	}
@@ -9956,7 +9956,7 @@ bool RtBinlog_c::ReplayReconfigure ( int iBinlog, DWORD uReplayFlags, BinlogRead
 		// we normally expect per-index TIDs to be sequential
 		// but let's be graceful about that
 		if ( iTID!=tIndex.m_pRT->m_iTID+1 )
-			sphWarning ( "binlog: reconfigure: unexpected tid (index=%s, indextid="INT64_FMT", logtid="INT64_FMT", pos="INT64_FMT")",
+			sphWarning ( "binlog: reconfigure: unexpected tid (index=%s, indextid=" INT64_FMT", logtid=" INT64_FMT", pos=" INT64_FMT")",
 				tIndex.m_sName.cstr(), tIndex.m_pRT->m_iTID, iTID, iTxnPos );
 
 		sError = "";
@@ -9964,7 +9964,7 @@ bool RtBinlog_c::ReplayReconfigure ( int iBinlog, DWORD uReplayFlags, BinlogRead
 		bool bSame = tIndex.m_pRT->IsSameSettings ( tSettings, tSetup, sError );
 
 		if ( !sError.IsEmpty() )
-			sphWarning ( "binlog: reconfigure: wrong settings (index=%s, indextid="INT64_FMT", logtid="INT64_FMT", pos="INT64_FMT", error=%s)",
+			sphWarning ( "binlog: reconfigure: wrong settings (index=%s, indextid=" INT64_FMT", logtid=" INT64_FMT", pos=" INT64_FMT", error=%s)",
 				tIndex.m_sName.cstr(), tIndex.m_pRT->m_iTID, iTID, iTxnPos, sError.cstr() );
 
 		if ( !bSame )

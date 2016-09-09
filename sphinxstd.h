@@ -2543,7 +2543,7 @@ public:
 			pData = (T *)::MapViewOfFile ( hFile, FILE_MAP_READ, 0, 0, 0 );
 			if ( !pData )
 			{
-				sError.SetSprintf ( "failed to map file '%s': (errno %d, length="INT64_FMT")", sFile, ::GetLastError(), (int64_t)tLen.QuadPart );
+				sError.SetSprintf ( "failed to map file '%s': (errno %d, length=" INT64_FMT")", sFile, ::GetLastError(), (int64_t)tLen.QuadPart );
 				Close();
 				return false;
 			}

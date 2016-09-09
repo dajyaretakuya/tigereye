@@ -100,7 +100,7 @@ void * sphDebugNew ( size_t iSize, const char * sFile, int iLine, bool bArray )
 {
 	BYTE * pBlock = (BYTE*) ::malloc ( iSize+sizeof(CSphMemHeader)+sizeof(DWORD) );
 	if ( !pBlock )
-		sphDie ( "out of memory (unable to allocate "UINT64_FMT" bytes)", (uint64_t)iSize ); // FIXME! this may fail with malloc error too
+		sphDie ( "out of memory (unable to allocate " UINT64_FMT" bytes)", (uint64_t)iSize ); // FIXME! this may fail with malloc error too
 
 	*(DWORD*)( pBlock+iSize+sizeof(CSphMemHeader) ) = MEMORY_MAGIC_END;
 	g_tAllocsMutex.Lock();
@@ -630,7 +630,7 @@ void * operator new ( size_t iSize )
 {
 	void * pResult = ::malloc ( iSize );
 	if ( !pResult )
-		sphDieRestart ( "out of memory (unable to allocate "UINT64_FMT" bytes)", (uint64_t)iSize ); // FIXME! this may fail with malloc error too
+		sphDieRestart ( "out of memory (unable to allocate " UINT64_FMT" bytes)", (uint64_t)iSize ); // FIXME! this may fail with malloc error too
 	return pResult;
 }
 
@@ -639,7 +639,7 @@ void * operator new [] ( size_t iSize )
 {
 	void * pResult = ::malloc ( iSize );
 	if ( !pResult )
-		sphDieRestart ( "out of memory (unable to allocate "UINT64_FMT" bytes)", (uint64_t)iSize ); // FIXME! this may fail with malloc error too
+		sphDieRestart ( "out of memory (unable to allocate " UINT64_FMT" bytes)", (uint64_t)iSize ); // FIXME! this may fail with malloc error too
 	return pResult;
 }
 

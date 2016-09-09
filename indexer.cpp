@@ -1091,7 +1091,7 @@ bool DoIndex ( const CSphConfigSection & hIndex, const char * sIndexName,
 	{
 		bHtmlStrip = hIndex.GetInt ( "html_strip" )!=0;
 		sHtmlIndexAttrs = hIndex.GetStr ( "html_index_attrs" );
-		sHtmlRemoveElements = hIndex.GetStr ( "html_remove_elements" );
+ 		sHtmlRemoveElements = hIndex.GetStr ( "html_remove_elements" );
 	} else
 	{
 		if ( bIndexSP )
@@ -1293,7 +1293,7 @@ bool DoIndex ( const CSphConfigSection & hIndex, const char * sIndexName,
 			iTotalBytes += tSource.m_iTotalBytes;
 		}
 
-		fprintf ( stdout, "total "INT64_FMT" docs, "INT64_FMT" bytes\n", iTotalDocs, iTotalBytes );
+		fprintf ( stdout, "total " INT64_FMT" docs, " INT64_FMT" bytes\n", iTotalDocs, iTotalBytes );
 
 		fprintf ( stdout, "total %d.%03d sec, %d bytes/sec, %d.%02d docs/sec\n",
 			(int)(tmTime/1000000), (int)(tmTime%1000000)/1000, // sec
@@ -1987,7 +1987,6 @@ int main ( int argc, char ** argv )
 #if SPH_DEBUG_LEAKS
 	sphAllocsStats ();
 #endif
-
 	return iExitCode;
 }
 

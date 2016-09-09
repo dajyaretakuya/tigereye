@@ -1,1 +1,1 @@
-#define SPH_GIT_COMMIT_ID "2fcf089"
+#define SPH_GIT_COMMIT_ID "424a307"
